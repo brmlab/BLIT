@@ -12,8 +12,6 @@ chmod 755 /usr/local/bin/hoover-start.sh
 editor /usr/local/bin/hoover-start.sh 
 
 cp wifi-probes.service /etc/systemd/system/
-* change value of User=ruza to user to be notified
-editor /etc/systemd/system/wifi-probes.service
 systemctl daemon-reload
 
 cp sudoers /etc/sudoers.d/wifi-probes
