@@ -13,7 +13,7 @@ PIDFile=/run/wifi-probe-scanner.pid
 KillMode=mixed
 Restart=on-failure
 RestartSec=42s
-User=ruza
+#User=ruza
 
 [Install]
 WantedBy=default.target

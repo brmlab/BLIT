@@ -114,9 +114,9 @@ _HELP_
 sub dumpNetworks {
 	my $i;
 	my $key;
-	print STDOUT "!! Dumping detected networks:\n";
-	print STDOUT "!! MAC Address          SSID                           Count      Last Seen\n";
-	print STDOUT "!! -------------------- ------------------------------ ---------- -------------------\n";
+	print STDOUT "## Dumping detected networks:\n";
+	print STDOUT "## MAC Address          SSID                           Count      Last Seen\n";
+	print STDOUT "## -------------------- ------------------------------ ---------- -------------------\n";
 	if ($dumpFile) {
 		open(DUMP, ">$dumpFile") || die "Cannot write to $dumpFile (Error: $?)";
 		print DUMP "MAC Address          SSID                           Count      Last Seen\n";
@@ -127,13 +127,13 @@ sub dumpNetworks {
 		#my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($detectedSSID{$key}[2]);
 		#my $lastSeen = sprintf("%04d/%02d/%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 		my $lastSeen = $detectedSSID{$key}[3];
-		print STDOUT sprintf("!! %-20s %-30s %10s %-20s\n", $detectedSSID{$key}[2],
+		print STDOUT sprintf("## %-20s %-30s %10s %-20s\n", $detectedSSID{$key}[2],
 		 				 $detectedSSID{$key}[0], $detectedSSID{$key}[1], $lastSeen);
 		($dumpFile) && print DUMP sprintf("%-20s %-30s %10s %-20s\n", 
 						 $detectedSSID{$key}[2], $detectedSSID{$key}[0],
 						 $detectedSSID{$key}[1], $lastSeen); 
 	}
-	print STDOUT "!! Total unique SSID: $uniqueSSID\n";
+	#print STDOUT "## Total unique SSID: $uniqueSSID\n";
 	($dumpFile) && print DUMP "Total unique SSID: $uniqueSSID\n";
 	close(DUMP);
 	return;
@@ -144,14 +144,14 @@ if ($pid) {
 	# ---------------------------------
 	# Parent process: run the main loop
 	# ---------------------------------
-	($verbose) && print "!! Running with PID: $$ (child: $pid)\n";
+	($verbose) && print "## Running with PID: $$ (child: $pid)\n";
 	#open(TSHARK, "$tsharkPath -i $interface -n -l subtype probereq |") || die "Cannot spawn tshark process!\n";
 	open(TSHARK, "$tsharkPath -i $interface -o gui.column.format:'\"Source\", \"%s\", \"Destination\", \"%d\", \"Protocol\", \"%p\", \"Info\", \"%i\"' -n -l subtype probereq |") || die "Cannot spawn tshark process!\n";
 
 	while (<TSHARK>) {
 		chomp;
 		my $line = $_;
-              	print "$line\n";  # debug
+              	print "DEBUG: $line\n";  # debug
 		chomp($line = $_); 
 		# Everything exept backslash (some probes contains the ssid in ascii, not usable)
 		#if($line = m/\d+\.\d+ ([a-zA-Z0-9:]+).+SSID=([a-zA-ZÀ-ÿ0-9"\s\!\@\$\%\^\&\*\(\)\_\-\+\=\[\]\{\}\,\.\?\>\<]+)/) { 
@@ -161,8 +161,7 @@ if ($pid) {
 				my $newKey = $2;
 				print DEBUG "$macAddress : $newKey\n";
 				my $time=localtime();
-				if (! $detectedSSID{$newKey})
-				{
+				if (! $detectedSSID{$newKey}) {
 					# New network found!
 					my @newSSID = ( $newKey,		# SSID
 							1,			# First packet
@@ -170,9 +169,9 @@ if ($pid) {
 							$time);		# Seen now
 					$detectedSSID{$newKey} = [ @newSSID ];
 					$uniqueSSID++;
-					print "++ New probe request from $macAddress with SSID: $newKey [$uniqueSSID] \@$time\n";
+					print STDOUT "New probe request from $macAddress with SSID: $newKey [$uniqueSSID] at $time\n";
 					if ( $dumpImmediately ) {
-                                        			dumpNetworks
+                                        			dumpNetworks;
                                         			#system("/bin/cat", "/home/ruza/bin/wifi-probe-requests/hoover/$dumpFile");
                                         		}
 				}
@@ -184,7 +183,6 @@ if ($pid) {
 					$detectedSSID{$newKey}[3] = $time;		# Now
 					($verbose) && print "-- Probe seen before: $newKey [$uniqueSSID] \@$detectedSSID{$newKey}[3] \n";
 				}
-					
 			}
 		}	
 	}
@@ -193,11 +191,12 @@ else {
 	# --------------------------------------------------
 	# Child process: Switch channels at regular interval
 	# --------------------------------------------------
-	($verbose) && print STDOUT "!! Switching wireless channel every 5\".\n";
+	($verbose) && print STDOUT "## Switching wireless channel every 5\".\n";
 	while (1) {
 		for (my $channel = 1; $channel <= 13; $channel++) {
+			print STDOUT "$interface channel set to $channel\n";
 			(system("$iwconfigPath $interface channel $channel")) &&
-				die "Cannot set interface channel.\n";
+				die "Cannot set interface $interface to channel $channel.\n";
 			sleep(5);
 		}
 	}
@@ -207,7 +206,7 @@ else {
 sub cleanKill {
 	if ($pid) {
 		# Parent process: display information
-		print "!! Received kill signal!\n";
+		print "## Received kill signal!\n";
 		kill 1, $pid;
 		dumpNetworks;
 	}
