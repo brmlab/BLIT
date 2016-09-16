@@ -6,7 +6,7 @@
   * toolkit is provided as-is and installing any tool from this toolkit in your Linux could require non-trivial tasks and adjustments or even need to read/rewrite/customize some parts of the code.
   * some of the scripts included are not my own but were taken from various sources from the Internet (if they were better comparing to what i wrote by myself). Mostly I respect their authorship by not touching headers with a link to the original autor if the files contain such information. However the files links to the original author, files can be subject to my changes, customizations or improvements to my needs.
  
-### Feel free to add your improvements/scripts to this collection
+### Feel free to add your improvements/scripts to this collection, fix bugs, update instalation instructions, etc.
 
 ## Tools included in toolkit in more detail:
   
