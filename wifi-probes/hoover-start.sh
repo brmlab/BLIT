@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 PIDFILE="/run/wifi-probe-scanner.pid"
 WIFI_INTERFACE="wlxra"
