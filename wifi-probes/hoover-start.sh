@@ -52,7 +52,7 @@ function main_start {
         touch  ${DUMPFILE} && echo "** dumpfile is ${DUMPFILE}"
         
         while read -r LINE; do
-                if [[ $LINE == *probe* ]] ; then
+                if [[ $LINE == *ProbeReq* ]] ; then
 			find_dbus_session
 			#echo "$(echo \"${LINE}\"|sed 's/.*++//')" >> /tmp/wifi-probes.debug
 			su ruza -c "notify-send \"$LINE\""

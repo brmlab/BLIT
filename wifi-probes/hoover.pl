@@ -70,6 +70,7 @@ my $options = GetOptions(
 	"tshark-path=s"		=> \$tsharkPath,
 	"dumpfile=s"		=> \$dumpFile,
 );
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
 
 if ($help) {
 	print <<_HELP_;
@@ -124,7 +125,8 @@ sub dumpNetworks {
 	}
 	for $key ( keys %detectedSSID)
 	{
-		#my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($detectedSSID{$key}[2]);
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+		#($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($detectedSSID{$key}[2]);
 		#my $lastSeen = sprintf("%04d/%02d/%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 		my $lastSeen = $detectedSSID{$key}[3];
 		print STDOUT sprintf("## %-20s %-30s %10s %-20s\n", $detectedSSID{$key}[2],
@@ -161,6 +163,7 @@ if ($pid) {
 				my $newKey = $2;
 				print DEBUG "$macAddress : $newKey\n";
 				my $time=localtime();
+				my $ltime="$hour:$min:$sec";
 				if (! $detectedSSID{$newKey}) {
 					# New network found!
 					my @newSSID = ( $newKey,		# SSID
@@ -169,7 +172,8 @@ if ($pid) {
 							$time);		# Seen now
 					$detectedSSID{$newKey} = [ @newSSID ];
 					$uniqueSSID++;
-					print STDOUT "New probe request from $macAddress with SSID: $newKey [$uniqueSSID] at $time\n";
+					#print STDOUT "ProbeReq from $macAddress to SSID:$newKey [$uniqueSSID] \@$ltime\n";
+					print STDOUT "ProbeReq from $macAddress to SSID:$newKey [$uniqueSSID]\n";
 					if ( $dumpImmediately ) {
                                         			dumpNetworks;
                                         			#system("/bin/cat", "/home/ruza/bin/wifi-probe-requests/hoover/$dumpFile");
