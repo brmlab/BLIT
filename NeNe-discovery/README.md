@@ -5,6 +5,8 @@ chmod 755 /usr/local/sbin/notify-arp-neighbours.sh
 cp netiface-default.py /usr/local/bin/;
 chmod 755 /usr/local/bin/netiface-default.py
 
+# Install Python netifaces , this command may be different for you
+pip install netifaces
 cp notify-send-as-root-MSG-permanent.sh /usr/local/bin/;
 chmod 755 /usr/local/bin/notify-send-as-root-MSG-permanent.sh
 
@@ -19,6 +21,9 @@ apt-get install arp-scan
 
 cp arp-localnet.sh /usr/local/bin/;
 chmod 755 /usr/local/bin/arp-localnet.sh
+
+# Edit value of LOGFILE, if you want to keep logs
+editor /usr/local/bin/arp-localnet.sh
 
 cp notify-arp-neighbours /etc/network/if-up.d/
 
