@@ -92,7 +92,7 @@ show_visual_notification()
       cur_display=${logged_users[$i + 1]}
 
       export DISPLAY=$cur_display
-      su $cur_user -c "notify-send '$header' '$text'"
+      su $cur_user -c "notify-send -u critical '$header' '$text'"
    done
 }
 
