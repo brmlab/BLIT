@@ -1,4 +1,4 @@
 #!/bin/bash -x
 #echo "START: $(date)" >> /tmp/nei
-/usr/local/sbin/notify-arp-neighbours.sh
+$(/usr/local/sbin/notify-arp-neighbours.sh) &
 #echo "STOP:  $(date)" >> /tmp/nei
